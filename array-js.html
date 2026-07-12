@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ToDo List</title>
+    <style>
+        .Add-btn {
+            background-color: green;
+            border: none;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .Del-btn{
+            background-color: red;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: white;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .style-grid-first, .style-grid{
+            display: grid;
+            grid-template-columns: 200px 150px 100px;
+            column-gap: 10px;
+            row-gap: 10px;
+            align-items: center;
+        }
+
+        .style-grid-first{
+            margin-bottom: 10px;
+            align-items: stretch;
+        }
+
+        .name-style, .date-style{
+            padding: 5px;
+            font-size: 16px;
+        }
+
+
+    </style>
+</head>
+<body>
+    <p>To-Do List</p>
+    <div class="style-grid-first">
+        <input class= "todo-name name-style" placeholder="Todo name"></input>
+        <input class="todo-date date-style" type="date"></input>
+        <button class="Add-btn" onclick="addToDo()">Add</button>
+    </div>
+    <div class="display-list style-grid"></div>
+    <script>
+            let arr = [];
+
+            function loadFromLocalStorage(){
+                const saved = localStorage.getItem('todoList');
+                if(saved){
+                    arr = JSON.parse(saved);
+                    renderList();
+                }
+            }
+
+            function saveToLocalStorage(){
+                localStorage.setItem('todoList', JSON.stringify(arr));
+            }
+
+            function addToDo(){
+                const name = document.querySelector('.todo-name').value;
+                const date = (document.querySelector('.todo-date').value ? new Date(document.querySelector('.todo-date').value) : new Date()).toLocaleDateString();
+                if(!name) return;
+                arr.push({name, date});
+                document.querySelector('.todo-name').value = '';
+                document.querySelector('.todo-date').value = '';
+                console.log(arr);
+                saveToLocalStorage();
+                renderList();
+            }
+
+            function renderList(){
+                let items = '';
+                for(let i = 0; i < arr.length; i++){
+                    items += `
+                            <div>${arr[i].name}</div>
+                            <div>${arr[i].date}</div>
+                            <button class="Del-btn" onClick="
+                                arr.splice(${i},1);
+                                saveToLocalStorage();
+                                renderList();
+                            ">Delete</button>
+                    `;
+                }
+                document.querySelector('.display-list').innerHTML = items;
+                console.log(items);
+            }
+
+            loadFromLocalStorage();
+    </script>
+</body>
+</html>

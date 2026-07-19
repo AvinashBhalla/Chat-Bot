@@ -5,3 +5,5 @@
 - Day 4 of working on it
 - Day 5 of working on it
 - Day 6 of working on it
+- Day 7 of working on it
+- 
